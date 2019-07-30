@@ -54,3 +54,9 @@ The golden image approach, also known as immutable deployments has its advantage
 You can also do a combination of both, building a golden image that has the most immutable elements, like the OS version, Apache version, PHP version and your custom tools, while leaving out the PHP scripts that require more frequent update.
 
 Refer to [Deploy a single region LAMP architecture](./webstack-lamp-deployment-single-region.md) to find a detailed step by step to deploy this architecture using different methods.
+
+### Distribute read workload to multiple MySQL read replicas in PHP
+
+Consider leveraging [mysqlnd_ms](https://www.php.net/manual/book.mysqlnd-ms.php) (a plugin for PHP’s native driver for MySQL) that can be used as load balancer proxy to distribute read workload to multiple read replicas.
+
+You can specify server name, user name, and password for connecting to a MySQL Server, so it can work to load balance and scale out by distributing read workload to Azure Database for MySQL read replicas.
