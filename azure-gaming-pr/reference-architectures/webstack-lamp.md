@@ -15,8 +15,11 @@ ms.service: azure
 
 ### Architecture diagram
 
+### Abstract
+
 [![Abstract single region LAMP architecture](media/webstack/webstack-lamp-single-region-general.png)](media/webstack/webstack-lamp-single-region-general.png)
 
+### Azure specific
 [![Azure single region LAMP architecture](media/webstack/webstack-lamp-single-region.png)](media/webstack/webstack-lamp-single-region.png)
 
 ### Architecture services
