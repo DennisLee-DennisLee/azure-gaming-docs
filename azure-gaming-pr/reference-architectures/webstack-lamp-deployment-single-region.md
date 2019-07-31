@@ -47,7 +47,6 @@ To initialize the variables:
 
 ```bash
 SET YOURSUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-SET YOURSUBSCRIPTIONID=4079abbe-ef74-4c5d-81d8-f3d2d297a2db
 SET RESOURCEGROUPNAME=myResourceGroup
 SET REGIONNAME=westus
 SET LOGINUSERNAME=azureuser
@@ -274,6 +273,14 @@ CALL az image create ^
  --os-type Linux
 ```
 
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+TBD
+
 ## Deploy the networking resources
 
 > [!CAUTION]
@@ -431,6 +438,10 @@ if %LBSKU%==Standard ECHO Creating a load balancing inbound rule for the port 44
  --backend-pool-name %LBBEPOOLNAME%
 ```
 
+### Azure Resource Manager template
+
+TBD
+
 ### Azure Portal
 
 TBD
@@ -511,6 +522,10 @@ CALL az redis list-keys ^
  --output tsv
 ```
 
+### Azure Resource Manager template
+
+TBD
+
 ### Azure Portal
 
 TBD
@@ -587,6 +602,14 @@ CALL az mysql server replica create ^
  --location %MYSQLREADREPLICAREGION%
 ```
 
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+TBD
+
 ## Create the Azure Storage account and container
 
 ### Command line approach using Azure CLI
@@ -616,6 +639,14 @@ CALL az storage account create ^
  --sku %STORAGESKU% ^
  --location %REGIONNAME%
 ```
+
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+TBD
 
 #### Get the connection string from the storage account
 
@@ -671,6 +702,14 @@ CALL az vmss create ^
  --generate-ssh-keys %VMSSOVERPROVISIONING%
 ```
 
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+TBD
+
 ## Create the autoscaler
 
 ### Command line approach using Azure CLI
@@ -720,3 +759,11 @@ CALL az monitor autoscale rule create ^
  --condition "%VMSSAUTOSCALERCRITERIA% < %VMSSAUTOSCALERDOWNTRIGGER%" ^
  --scale in %VMSSAUTOSCALERINDECREASE%
 ```
+
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+TBD
