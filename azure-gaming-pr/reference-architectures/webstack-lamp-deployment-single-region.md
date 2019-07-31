@@ -640,14 +640,6 @@ CALL az storage account create ^
  --location %REGIONNAME%
 ```
 
-### Azure Resource Manager template
-
-TBD
-
-### Azure Portal
-
-TBD
-
 #### Get the connection string from the storage account
 
 ```batch
@@ -663,6 +655,16 @@ CALL az storage container create ^
  --name %STORAGECONTAINERNAME% ^
  --connection-string %STORAGECONNECTIONSTRING%
 ```
+
+### Azure Resource Manager template
+
+TBD
+
+### Azure Portal
+
+Refer to [Create a storage account](https://docs.microsoft.com/azure/storage/common/storage-quickstart-create-account?tabs=azure-portal#create-a-storage-account-1), showing you how to create an Azure Storage account using the Azure Portal.
+
+Refer to [Create a container](https://docs.microsoft.com/azure/storage/blobs/storage-quickstart-blobs-portal#create-a-container), showing you how to create an storage containe in the Azure portal.
 
 ## Create a Virtual Machine Scale Set
 
