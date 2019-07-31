@@ -666,6 +666,8 @@ CALL az storage container create ^
 
 ## Create a Virtual Machine Scale Set
 
+A virtual machine scale set allows you to deploy and manage a set of identical, auto-scaling virtual machines.
+
 ### Command line approach using Azure CLI
 
 #### Initialize variables
@@ -708,7 +710,7 @@ TBD
 
 ### Azure Portal
 
-TBD
+Refer to [Create a virtual machine scale set in the Azure portal](https://docs.microsoft.com/azure/virtual-machine-scale-sets/quick-create-portal) to learn how to deploy a VM scale set using the Azure Portal.
 
 ## Create the autoscaler
 
