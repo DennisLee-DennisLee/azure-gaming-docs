@@ -43,6 +43,16 @@ Regardless of what step you are working on, it's best practice to keep a set of 
 - **RESOURCEGROUPNAME**: The name of the resource group that will contain all the different Azure services from the architecture. Consider appending the region name as a suffix.
 - **PREFIX**: The string that will precede all the Azure services for future identification purposes. i.e: the codename of your game.
 
+To initialize the variables:
+
+```bash
+SET YOURSUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+SET YOURSUBSCRIPTIONID=4079abbe-ef74-4c5d-81d8-f3d2d297a2db
+SET RESOURCEGROUPNAME=myResourceGroup
+SET REGIONNAME=westus
+SET LOGINUSERNAME=azureuser
+```
+
 If you haven't already done so, install [Azure CLI](https://docs.microsoft.com/cli/azure/install-az-cli2), a command-line tool providing a great experience for managing Azure resources. The CLI is designed to make scripting easy, query data, support long-running operations, and more.
 
 ## Deploy a Virtual Machine on a Managed Disk
@@ -60,6 +70,15 @@ On top of the general configuration variables, the following variables are also 
 | **VMNAME** | Canonical:UbuntuServer:16.04-LTS:latest | | | | The Linux OS that will be installed in the Virtual Machine.
 | **VMSIZE** | Standard_B1s | Standard_B1s | Standard_F4s_v2 | Standard_F32s_v2 | Virtual Machine option. Be aware that Premium SSD is not supported in every Virtual Machine option. [Learn more](https://azure.microsoft.com/pricing/details/virtual-machines/linux/#Linux).
 | **VMDATADISKSIZEINGB** | 5 | 5 | 10 | 30 | How much persistent disk storage you are going to allocate per Virtual Machine. [Benefits of using managed disks](https://docs.microsoft.com/azure/virtual-machines/windows/managed-disks-overview#benefits-of-managed-disks).
+
+#### Initialize the variables
+
+```bash
+SET VMNAME=myVirtualMachine
+SET IMAGE=Canonical:UbuntuServer:16.04-LTS:latest
+SET VMSIZE=Standard_B1s
+SET VMDATADISKSIZEINGB=5
+```
 
 > [!NOTE]
 > Aside from the core steps documented below, for more details about the process of deploying a Virtual Machine on a Managed Disk, refer to the [Create and Manage Linux VMs with the Azure CLI](https://docs.microsoft.com/azure/virtual-machines/linux/tutorial-manage-vm) tutorial that covers basic Azure virtual machine deployment items such as selecting a VM size, selecting a VM image, and deploying a VM.
@@ -239,6 +258,14 @@ CALL az vm generalize ^
 
 #### Command line approach using Azure CLI
 
+To initialize the variables:
+
+```batch
+SET GOLDENIMAGENAME=myGoldenImage
+```
+
+Then:
+
 ```batch
 CALL az image create ^
  --resource-group %RESOURCEGROUPNAME% ^
@@ -274,6 +301,27 @@ On top of the previously defined variables, the following variables are also bei
 | **LBNATPOOLNAME** | LBNAME + NATPool | | | | The Azure Load Balancer NAT pool name.
 | **LBRULEHTTPNAME** | LBNAME + HTTPRule | | | | The Azure Load Balancer inbound NAT rule name for the HTTP connections.
 | **LBRULEHTTPSNAME** | | Note: Only Standard SKU | LBNAME + HTTPSRule | LBNAME + HTTPSRule | The Azure Load Balancer inbound NAT rule name for the HTTPs connections.
+
+#### Initialize the variables
+
+```batch
+SET LBSKU=Basic
+SET PUBLICIPNAME=%PREFIX%PublicIP
+SET PUBLICIPALLOCATION=Static
+SET PUBLICIPVERSION=IPv4
+SET LBNAME=%PREFIX%LB
+SET VNETNAME=%PREFIX%VNET
+SET VNETADDRESSPREFIX=10.0.0.0/16
+SET SUBNETNAME=%PREFIX%Subnet
+SET SUBNETADDRESSPREFIX=10.0.0.0/24
+SET LBBEPOOLNAME=%LBNAME%BEPool
+SET LBFENAME=%LBNAME%FE
+SET LBFEPORTRANGESTART=50000
+SET LBFEPORTRANGEEND=50119
+SET LBNATPOOLNAME=%LBNAME%NATPool
+SET LBRULEHTTPNAME=%LBNAME%HTTPRule
+SET LBRULEHTTPSNAME=%LBNAME%HTTPSRule
+```
 
 #### Create the Azure Virtual Network
 
@@ -402,8 +450,21 @@ On top of the previously defined variables, the following variables are also bei
 | **REDISSHARDSTOCREATE** | | Note: Only Premium SKU | Note: Only Premium SKU | 10 | Number of shards per cluster.
 | **REDISSUBNETNAME** | | Note: Only Premium SKU | Note: Only Premium SKU | REDISNAME + Subnet | When an Azure Cache for Redis instance is configured with an Azure Virtual Network, it is not publicly addressable and can only be accessed from virtual machines and applications within the Azure Virtual Network. [Learn More](https://docs.microsoft.com/azure/azure-cache-for-redis/cache-how-to-premium-vnet).
 | **SUBNETADDRESSPREFIX** | | Note: Only Premium SKU | Note: Only Premium SKU | 10.0.1.0/24 | **Important**: When deploying an Azure Cache for Redis to an Azure Virtual Network, the cache must be in a dedicated subnet that contains no other resources except for Azure Cache for Redis instances.
-| **SUBNETID** | | Note: Only Premium SKU | Note: Only Premium SKU | SUBNETID=/subscriptions/YOURSUBSCRIPTIONID/resourceGroups/RESOURCEGROUPNAME/providers/Microsoft.Network/virtualNetworks/VNETNAME/subnets/REDISSUBNETNAME
- | Note: The full string is required.
+| **SUBNETID** | | Note: Only Premium SKU | Note: Only Premium SKU | SUBNETID=/subscriptions/YOURSUBSCRIPTIONID/resourceGroups/RESOURCEGROUPNAME/providers/Microsoft.Network/virtualNetworks/VNETNAME/subnets/REDISSUBNETNAME | Note: The full string is required.
+
+#### Initialize the variables
+
+```batch
+SET REDISNAME=%PREFIX%Redis
+SET REDISNAMEUNIQUE=%REDISNAME%%RANDOM%
+SET REDISVMSIZE=P1
+SET REDISSKU=Premium
+SET REDISSHARDSTOCREATE=2
+SET VNETNAME=%PREFIX%VNET
+SET REDISSUBNETNAME=%REDISNAME%Subnet
+SET SUBNETADDRESSPREFIX=10.0.1.0/24
+SET SUBNETID=/subscriptions/%YOURSUBSCRIPTIONID%/resourceGroups/%RESOURCEGROUPNAME%/providers/Microsoft.Network/virtualNetworks/%VNETNAME%/subnets/%REDISSUBNETNAME%
+```
 
 #### Create a specific subnet named cache
 
@@ -473,6 +534,22 @@ On top of the previously defined variables, the following variables are also bei
 | **MYSQLVERSION** | 5.7 | 5.7 | 5.7 | 5.7 | MySQL version.
 | **MYSQLREADREPLICANAME** | | | MYSQLNAME + Replica | MYSQLNAME + Replica1 ... | Read replica MySQL name.
 | **MYSQLREADREPLICAREGION** | | | REGIONNAME | REGIONNAME | Azure region where the read replica will be deployed.
+
+#### Initialize the variables
+
+```batch
+SET MYSQLNAME=%PREFIX%MySQL
+SET MYSQLUSERNAME=azuremysqluser
+SET MYSQLPASSWORD=CHang3thisP4Ssw0rD
+SET MYSQLDBNAME=gamedb
+SET MYSQLBACKUPRETAINEDDAYS=7
+SET MYSQLGEOREDUNDANTBACKUP=Disabled
+SET MYSQLSKU=GP_Gen5_2
+SET MYSQLSTORAGEMBSIZE=51200
+SET MYSQLVERSION=5.7
+SET MYSQLREADREPLICANAME=%MYSQLNAME%Replica
+SET MYSQLREADREPLICAREGION=westus
+```
 
 #### Enable Azure CLI db-up extension (in preview)
 
