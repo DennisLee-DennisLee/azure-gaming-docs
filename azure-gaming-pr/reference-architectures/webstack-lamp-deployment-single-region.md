@@ -712,6 +712,8 @@ TBD
 
 ## Create the autoscaler
 
+It monitors the performance of the Virtual Machine instances in your scale set. These autoscale rules increase or decrease the number of Virtual Machine instances in response to these performance metrics.
+
 ### Command line approach using Azure CLI
 
 #### Initialize variables
@@ -766,4 +768,4 @@ TBD
 
 ### Azure Portal
 
-TBD
+Refer to [Automatically scale a virtual machine scale set in the Azure portal](https://docs.microsoft.com/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-autoscale-portal), showing you how to create autoscale rules in the Azure Portal.
