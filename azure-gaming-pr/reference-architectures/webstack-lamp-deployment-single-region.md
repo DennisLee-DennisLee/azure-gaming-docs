@@ -586,3 +586,137 @@ CALL az mysql server replica create ^
  --source-server %MYSQLNAME% ^
  --location %MYSQLREADREPLICAREGION%
 ```
+
+## Create the Azure Storage account and container
+
+### Command line approach using Azure CLI
+
+On top of the previously defined variables, the following variables are also being used:
+
+|Variable|Default value|Small T-shirt value|Medium T-shirt value|Large T-shirt value|Description|
+|----------|----------|-----------|----------|----------|-----------|
+| **STORAGENAME** | mygamebackendstrg%RANDOM% | | | | The name of the storage account. **Important**: The name of the Azure Storage has to be entirely unique across all Azure customers. Hence the scripts use a random generator. And it has to be all lowercase.
+| **STORAGESKU** | Standard_LRS | Standard_LRS | Premium_LRS | Premium_LRS | The SKU to setup, either standard, premium or ultra.
+| **STORAGECONTAINERNAME** | %STORAGENAME%cntnr | | | | The blobs need to be stored within a container.
+
+#### Initialize variables
+
+```batch
+SET STORAGENAME=mygamebackendstrg%RANDOM%
+SET STORAGESKU=Standard_LRS
+SET STORAGECONTAINERNAME=%STORAGENAME%cntnr
+```
+
+#### Create a storage account
+
+```batch
+CALL az storage account create ^
+ --resource-group %RESOURCEGROUPNAME% ^
+ --name %STORAGENAME% ^
+ --sku %STORAGESKU% ^
+ --location %REGIONNAME%
+```
+
+#### Get the connection string from the storage account
+
+```batch
+CALL az storage account show-connection-string -n %STORAGENAME% -g %RESOURCEGROUPNAME% --query connectionString -o tsv > connectionstring.tmp
+SET /p STORAGECONNECTIONSTRING=<connectionstring.tmp
+CALL DEL connectionstring.tmp
+```
+
+#### Create a storage container into the storage account
+
+```batch
+CALL az storage container create ^
+ --name %STORAGECONTAINERNAME% ^
+ --connection-string %STORAGECONNECTIONSTRING%
+```
+
+## Create a Virtual Machine Scale Set
+
+### Command line approach using Azure CLI
+
+#### Initialize variables
+
+```batch
+SET VMSSNAME=%PREFIX%VMSS
+SET GOLDENIMAGENAME=myGoldenImage
+SET VMSSSKUSIZE=Standard_DS1_v2
+SET VMSSVMTOCREATE=2
+SET VMSSSTORAGETYPE=Premium_LRS
+SET VMSSACELERATEDNETWORKING=false
+SET VMSSUPGRADEPOLICY=Rolling
+SET VMSSOVERPROVISIONING=--disable-overprovision
+```
+
+#### Create a scale set
+
+```batch
+CALL az vmss create ^
+ --resource-group %RESOURCEGROUPNAME% ^
+ --name %VMSSNAME% ^
+ --image %GOLDENIMAGENAME% ^
+ --upgrade-policy-mode %VMSSUPGRADEPOLICY% ^
+ --load-balancer %LBNAME% ^
+ --vnet-name %VNETNAME% ^
+ --subnet %SUBNETNAME% ^
+ --admin-username %LOGINUSERNAME% ^
+ --instance-count %VMSSVMTOCREATE% ^
+ --backend-pool-name %LBBEPOOLNAME% ^
+ --storage-sku %VMSSSTORAGETYPE% ^
+ --vm-sku %VMSSSKUSIZE% ^
+ --lb-nat-pool-name %LBNATPOOLNAME% ^
+ --accelerated-networking %VMSSACELERATEDNETWORKING% ^
+ --generate-ssh-keys %VMSSOVERPROVISIONING%
+```
+
+## Create the autoscaler
+
+### Command line approach using Azure CLI
+
+#### Initialize variables
+
+```batch
+SET VMSSAUTOSCALERNAME=%PREFIX%Autoscaler
+SET VMSSAUTOSCALERCRITERIA=Percentage CPU
+SET VMSSAUTOSCALERMAXCOUNT=10
+SET VMSSAUTOSCALERMINCOUNT=%VMSSVMTOCREATE%
+SET VMSSAUTOSCALERUPTRIGGER=50 avg 5m
+SET VMSSAUTOSCALERDOWNTRIGGER=30 avg 5m
+SET VMSSAUTOSCALEROUTINCREASE=1
+SET VMSSAUTOSCALERINDECREASE=1
+```
+
+#### Define the autoscaling profile
+
+```batch
+CALL az monitor autoscale create ^
+ --resource-group %RESOURCEGROUPNAME% ^
+ --resource %VMSSNAME% ^
+ --resource-type Microsoft.Compute/virtualMachineScaleSets ^
+ --name %VMSSAUTOSCALERNAME% ^
+ --min-count %VMSSAUTOSCALERMINCOUNT% ^
+ --max-count %VMSSAUTOSCALERMAXCOUNT% ^
+ --count %VMSSVMTOCREATE%
+```
+
+#### Enable virtual machine autoscaler for scaling out
+
+```batch
+CALL az monitor autoscale rule create ^
+ --resource-group %RESOURCEGROUPNAME% ^
+ --autoscale-name %VMSSAUTOSCALERNAME% ^
+ --condition "%VMSSAUTOSCALERCRITERIA% > %VMSSAUTOSCALERUPTRIGGER%" ^
+ --scale out %VMSSAUTOSCALEROUTINCREASE%
+```
+
+#### Enable virtual machine autoscaler for scaling in
+
+```batch
+CALL az monitor autoscale rule create ^
+ --resource-group %RESOURCEGROUPNAME% ^
+ --autoscale-name %VMSSAUTOSCALERNAME% ^
+ --condition "%VMSSAUTOSCALERCRITERIA% < %VMSSAUTOSCALERDOWNTRIGGER%" ^
+ --scale in %VMSSAUTOSCALERINDECREASE%
+```
