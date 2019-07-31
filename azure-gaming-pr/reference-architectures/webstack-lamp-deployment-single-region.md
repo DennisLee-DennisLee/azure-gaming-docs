@@ -1,11 +1,11 @@
 ---
 title: Deploy a single region LAMP architecture
 description: Detailed step by step to deploy this architecture using different methods.
-author: BrianPeek
+author: DavidJimenez
 keywords: 
 ms.topic: reference-architecture
 ms.date: 3/14/2019
-ms.author: brpeek
+ms.author: dajimene
 ms.service: azure
 ---
 
@@ -13,7 +13,7 @@ ms.service: azure
 
 This document covers different methods to deploy a single region LAMP architecture, either using command line tools on either Linux bash or Windows batch for a more hands on programmatic setup, or an Azure Resource Manager template for a one-click deployment. In most cases there will be pointers to how to setup a certain portion of the architecture using the Azure Portal.
 
-In general, when deploying a single region  LAMP architecture there are certain steps that are mostly one-offs while others need to be executed in more regular basis as your backend gets updated to match your game requirements. Here below is the full step list:
+In general, when deploying a single region LAMP architecture there are certain steps that are mostly one-offs while others need to be executed in more regular basis as your backend gets updated to match your game requirements. Here below is the full step list:
 
 **Mostly one-offs operations**
 
@@ -25,7 +25,8 @@ In general, when deploying a single region  LAMP architecture there are certain 
 6. Deploy the Azure Cache for Redis.
 7. Deploy the Azure Database for MySQL.
 8. Create the Azure Storage account and container.
-9. Create your Virtual Machine Scale Set ensuring it references the captured Disk Image as the OS Disk and setup the autoscale settings.
+9. Create your Virtual Machine Scale Set ensuring it references the captured Disk Image as the OS Disk
+1. Setup the autoscale settings.
 
 > [!NOTE]
 > You may want in the future to change to another Linux OS version or PHP version, so that would require to recreate the custom golden image (steps 1-4). Or you may want to make changes into the autoscaler (step 8).
